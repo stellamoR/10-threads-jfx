@@ -23,7 +23,7 @@ public final class Dish {
 		this.mealName = mealDescription;
 
 		/* calculate a random cooking time between 600 and round about 2500 */
-		this.cookingTime = (int)(Math.random() * MULTIPLIER * (double) mealDescription.length() + MINIMUM_COOK_TIME);
+		this.cookingTime = (int)(Math.random() * MULTIPLIER * (double) mealDescription.length() + MINIMUM_COOK_TIME)/10;
 	}
 
 	/**

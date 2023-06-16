@@ -28,7 +28,15 @@ public class KitchenHatchImpl implements KitchenHatch{
 
 	@Override
 	public Order dequeueOrder(long timeout) {
-		return orders.remove();
+
+		Order o = null;
+		synchronized (orders){
+			if(orders.size()>=  1){
+				o = orders.pop();
+			}
+			return o;
+		}
+
 	}
 
 	@Override
@@ -38,16 +46,50 @@ public class KitchenHatchImpl implements KitchenHatch{
 
 	@Override
 	public Dish dequeueDish(long timeout) {
-		return dishes.remove();
+		long currentTimeStamp = System.nanoTime();
+
+		synchronized(dishes){
+			while(dishes.size()== 0){
+
+				try {
+					dishes.wait(timeout);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				if( timeout>0 && dishes.size() == 0 && System.nanoTime() -currentTimeStamp>= timeout){
+					dishes.notifyAll();
+					return null;
+				}
+			}
+			Dish ret = dishes.pop();
+			dishes.notifyAll();
+			return ret;
+		}
 	}
 
 	@Override
 	public void enqueueDish(Dish m) {
-		dishes.addLast(m);
+		synchronized (dishes){
+			while(dishes.size() >= maxMeals){
+
+				try {
+					dishes.wait();
+				} catch (InterruptedException e) {
+					throw new RuntimeException(e);
+				}
+			}
+			dishes.push( m);
+			dishes.notifyAll();
+
+		}
 	}
 
 	@Override
 	public int getDishesCount() {
 		return dishes.size();
+	}
+
+	public Deque<Dish> getDishes(){
+		return dishes;
 	}
 }

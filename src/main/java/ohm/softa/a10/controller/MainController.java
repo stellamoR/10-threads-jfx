@@ -41,7 +41,7 @@ public class MainController implements Initializable {
 		nameGenerator = new NameGenerator();
 
 		//TODO assign an instance of your implementation of the KitchenHatch interface
-		this.kitchenHatch = new KitchenHatchImpl(15, new LinkedList<Order>());
+		this.kitchenHatch = new KitchenHatchImpl(KITCHEN_HATCH_SIZE, new LinkedList<Order>());
 		this.progressReporter = new ProgressReporter(kitchenHatch, COOKS_COUNT, WAITERS_COUNT, ORDER_COUNT, KITCHEN_HATCH_SIZE);
 
 	}

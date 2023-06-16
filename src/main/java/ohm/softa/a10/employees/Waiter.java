@@ -20,9 +20,13 @@ public class Waiter implements Runnable{
 
 	@Override
 	public void run() {
+		try {
+			Thread.sleep(100);
+		} catch (InterruptedException e) {
+			throw new RuntimeException(e);
+		}
 		while(kitchenHatch.getDishesCount() > 0 && kitchenHatch.getOrderCount()>0){
 			Dish d = kitchenHatch.dequeueDish();
-			System.out.println(d.getCookingTime());
 			try {
 				Thread.sleep(new Random().nextInt(100));
 			} catch (InterruptedException e) {
